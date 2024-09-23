@@ -47,41 +47,41 @@ export async function validateTerraformScript(document: vscode.TextDocument): Pr
 
     const policies = await fetchPolicies() || defaultPolicies[cloudProvider];
 
-    console.log(policies)
+    console.log("policies ::",policies.s3_min)
 
     if (cloudProvider === 'aws') {
         // AWS validation
         const s3Resources = (text.match(/resource\s+"aws_s3_bucket"/g) || []).length;
-        if (s3Resources < policies.aws.s3_min) {
-            issues.push(`At least ${policies.aws.s3_min} S3 buckets required, found ${s3Resources}.`);
+        if (s3Resources < policies.s3_min) {
+            issues.push(`At least ${policies.s3_min} S3 buckets required, found ${s3Resources}.`);
         }
-        if (s3Resources > policies.aws.s3_max) {
-            issues.push(`At most ${policies.aws.s3_max} S3 buckets allowed, found ${s3Resources}.`);
+        if (s3Resources > policies.s3_max) {
+            issues.push(`At most ${policies.s3_max} S3 buckets allowed, found ${s3Resources}.`);
         }
 
         const ec2Resources = (text.match(/resource\s+"aws_instance"/g) || []).length;
-        if (ec2Resources < policies.aws.ec2_min) {
-            issues.push(`At least ${policies.aws.ec2_min} EC2 instances required, found ${ec2Resources}.`);
+        if (ec2Resources < policies.ec2_min) {
+            issues.push(`At least ${policies.ec2_min} EC2 instances required, found ${ec2Resources}.`);
         }
-        if (ec2Resources > policies.aws.ec2_max) {
+        if (ec2Resources > policies.ec2_max) {
             issues.push(`At most ${policies.aws.ec2_max} EC2 instances allowed, found ${ec2Resources}.`);
         }
     } else if (cloudProvider === 'azure') {
         // Azure validation
         const storageResources = (text.match(/resource\s+"azurerm_storage_account"/g) || []).length;
-        if (storageResources < policies.azure.storage_min) {
-            issues.push(`At least ${policies.azure.storage_min} Azure storage accounts required, found ${storageResources}.`);
+        if (storageResources < policies.storage_min) {
+            issues.push(`At least ${policies.storage_min} Azure storage accounts required, found ${storageResources}.`);
         }
-        if (storageResources > policies.azure.storage_max) {
-            issues.push(`At most ${policies.azure.storage_max} Azure storage accounts allowed, found ${storageResources}.`);
+        if (storageResources > policies.storage_max) {
+            issues.push(`At most ${policies.storage_max} Azure storage accounts allowed, found ${storageResources}.`);
         }
 
         const vmResources = (text.match(/resource\s+"azurerm_virtual_machine"/g) || []).length;
-        if (vmResources < policies.azure.vm_min) {
-            issues.push(`At least ${policies.azure.vm_min} Azure VMs required, found ${vmResources}.`);
+        if (vmResources < policies.vm_min) {
+            issues.push(`At least ${policies.vm_min} Azure VMs required, found ${vmResources}.`);
         }
-        if (vmResources > policies.azure.vm_max) {
-            issues.push(`At most ${policies.azure.vm_max} Azure VMs allowed, found ${vmResources}.`);
+        if (vmResources > policies.vm_max) {
+            issues.push(`At most ${policies.vm_max} Azure VMs allowed, found ${vmResources}.`);
         }
     }
 
